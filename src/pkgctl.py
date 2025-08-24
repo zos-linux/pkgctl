@@ -182,6 +182,7 @@ def install_package(package, rootdir, mode):
 		v.write(variables['PKGVERSION']) 
 	with open(os.path.join(pkgdb, "PKGNAME"), "w") as p:
 		p.write(variables['PKGNAME'])
+	os.system(f"cp -f {os.path.join('/usr/ports', package, 'CATEGORY')} {os.path.join(pkgdb, 'CATEGORY')}")
 
 parser = argparse.ArgumentParser(description="Example")
 
@@ -243,7 +244,11 @@ elif args.remove != None:
 			else:
 				confirm = "y"
 			if confirm != "y":
-				exitp("")
+				exitp("Aborting")
+			if open(os.path.join(rootdir, 'var/db/pkgctl', args.remove, 'CATEGORY')).read() == "base":
+				confirm = input(f"{RED}WARNING: {RESET}{args.remove} {YELLOW}is a base package. Are you sure you want to remove {args.remove}{YELLOW}? (y/n): {RESET}")
+				if confirm != "y""
+					exitp("Aborting")
 			os.system(f"rm -rf {rpkg.read()}")
 			os.system(f"rm -rf {os.path.join(rootdir, 'var/db/pkgctl', args.remove)}")
 			exitp(f"{GREEN}Task completed succesfully!{RESET}")
