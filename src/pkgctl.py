@@ -73,7 +73,7 @@ def run_commands(commands, variables, exitp):
     for cmd in commands:
         for k, v in variables.items():
             cmd = cmd.replace(f"${k}", v)
-        print(f"\n{BRIGHT_BLUE}>> Running: {RESET}{cmd}")
+        print(f"\n{BRIGHT_BLUE}==>> Running: {RESET}{cmd}")
         try:
             subprocess.run(
                 cmd,
@@ -147,31 +147,23 @@ def install_package(package, rootdir, mode):
 	os.makedirs(cachedir, exist_ok=True)
 	os.makedirs(builddir, exist_ok=True)
 
-	#for sec in ("fetch", "build", "install"):
-	#	if sec in sections:
-	#		if sec == "fetch":
-	#			os.chdir(cachedir)
-	#		else:
-	#			os.chdir(builddir)
-	#		run_commands(sections[sec], variables)
-
 	if "fetch" in sections:
-		print(f"{BRIGHT_BLUE}>> Fetching... {RESET}")
+		print(f"{BRIGHT_BLUE}==>> Fetching... {RESET}")
 		os.chdir(cachedir)
 		run_commands(sections["fetch"], variables)
 
 	if "build" in sections:
-		print(f"{BRIGHT_BLUE}>> Building... {RESET}")
+		print(f"{BRIGHT_BLUE}==>> Building... {RESET}")
 		os.chdir(builddir)
 		run_commands(sections["build"], variables)
 
 	if "strip" in sections:
-		print(f"{BRIGHT_BLUE}>> Stripping binaries... {RESEET}")
+		print(f"{BRIGHT_BLUE}==>> Stripping binaries... {RESEET}")
 		os.chdir(builddir)
 		run_commands(sections["strip"], variables)
 
 	if "install" in sections:
-		print(f"{BRIGHT_BLUE}>> Installing... {RESET}")
+		print(f"{BRIGHT_BLUE}==>> Installing... {RESET}")
 		os.chdir(builddir)
 		run_commands(sections["install"], variables)
 
@@ -186,7 +178,6 @@ def install_package(package, rootdir, mode):
 
 parser = argparse.ArgumentParser(description="Example")
 
-#parser.add_argument("pkg", help="exp")
 parser.add_argument("-B", "--build", type=str, action="store", help="Build only, do not install (WIP)")
 #parser.add_argument("-v", "--verbose", action="store_true", help="Verbose mode")
 #parser.add_argument("-q", "--quiet", action="store_true", help="Quiet mode")
@@ -249,6 +240,7 @@ elif args.remove != None:
 				confirm = input(f"{RED}WARNING: {RESET}{args.remove} {YELLOW}is a base package. Are you sure you want to remove {args.remove}{YELLOW}? (y/n): {RESET}")
 				if confirm != "y""
 					exitp("Aborting")
+			print(f"{BRIGHT_BLUE}==>> Deinstalling {args.remove}...{RESET}")
 			os.system(f"rm -rf {rpkg.read()}")
 			os.system(f"rm -rf {os.path.join(rootdir, 'var/db/pkgctl', args.remove)}")
 			exitp(f"{GREEN}Task completed succesfully!{RESET}")
