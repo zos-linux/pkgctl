@@ -13,7 +13,7 @@ or install it from source
 ```bash
 git clone https://gitlab.com/zos-linux/pkgctl.git
 cd pkgctl
-./config --prefix=/usr
+./configure --prefix=/usr
 sudo make install
 ```
 ## Usage
