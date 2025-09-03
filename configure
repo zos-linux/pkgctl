@@ -81,6 +81,22 @@ else
 	fi
 fi
 
+printf "Checking if tqdm Python module is avaible... "
+if python3 -c "import tqdm" &> /dev/null; then
+	printf "yes\n"
+else
+	printf "no\n"
+	exit 1
+fi
+
+printf "Checking if requests Python module is avaible... "
+if python3 -c "import requests" &> /dev/null; then
+	printf "yes\n"
+else
+	printf "no\n"
+	exit 1
+fi
+
 printf "Checking source directory... "
 SRCDIR=$(dirname $(readlink -f "$0"))
 printf "$SRCDIR\n"
