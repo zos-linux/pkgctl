@@ -3,7 +3,7 @@ DESTDIR = destdir
 PREFIX = prefix
 PKGCTLBIN = $(SRCDIR)/src/pkgctl.py
 FILES = $(SRCDIR)/FILES
-VERSION = 1.0
+VERSION = 1.1
 PKGNAME = pkgctl
 CATEGORY = base
 
@@ -11,9 +11,12 @@ all:
 	echo "Run make install as root to install pkgctl ^_^"
 
 install:
-	cp -v $(PKGCTLBIN) $(DESTDIR)/$(PREFIX)/bin/pkgctl
-	mkdir -p $(DESTDIR)/var/db/pkgctl/pkgctl
-	cp $(FILES) $(DESTDIR)/var/db/pkgctl/pkgctl/FILES
+	install -m 755 $(PKGCTLBIN) $(DESTDIR)/$(PREFIX)/bin/pkgctl
+	install -d -m 644 $(DESTDIR)/var/db/pkgctl/pkgctl
+	install -d -m 644 $(DESTDIR)/$(PREFIX)/share/pkgctl/modules
+	install -m 755 $(SRCDIR)/src/modules/fetch.py $(DESTDIR)/$(PREFIX)/share/pkgctl/modules/fetch.py
+	install -m 755 $(SRCDIR)/src/modules/exitp.py $(DESTDIR)/$(PREFIX)/share/pkgctl/modules/exitp.py
+	install -m 644  $(FILES) $(DESTDIR)/var/db/pkgctl/pkgctl/FILES
 	echo $(VERSION) > $(DESTDIR)/var/db/pkgctl/pkgctl/VERSION
 	echo $(PKGNAME) > $(DESTDIR)/var/db/pkgctl/pkgctl/PKGNAME
 	echo $(CATEGORY) > $(DESTDIR)/var/db/pkgctl/pkgctl/CATEGORY
