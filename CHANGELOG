@@ -1,8 +1,15 @@
 English:
 
 1.0:
-First release, may be unstable
+- First release, may be unstable
+
+1.1:
+- Added fetching module for pkgctl
 
 Polski:
+
 1.0:
-Pierwsze wydanie, może być niestabilne
+- Pierwsze wydanie, może być niestabilne
+
+1.1:
+- Added fetching module for pkgctl
