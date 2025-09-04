@@ -90,9 +90,9 @@ def run_commands(commands, variables, exitp):
                 stderr=sys.stderr
             )
         except subprocess.CalledProcessError as e:
-            exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Child-process failed with error code{RESET} {e.returncode}: {cmd}")
+            exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Child-process failed with error code{RESET} {e.returncode}: {cmd}", "p", 1)
         except Exception as e:
-            exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Child-process {RESET}'{cmd}' {BRIGHT_BLUE}failed{RESET}: {e}")
+            exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Child-process {RESET}'{cmd}' {BRIGHT_BLUE}failed{RESET}: {e}", "p", 1)
             
             
 if os.path.exists("/etc/pkgctl.conf") == True:
@@ -108,12 +108,12 @@ if os.path.exists("/etc/pkgctl.conf") == True:
 				value= value.strip().strip('"').strip("'")
 				variables[key] = value
 else:
-	exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}/etc/pkgctl.conf does not exist!{RESET}")
+	exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}/etc/pkgctl.conf does not exist!{RESET}", "p", 1)
 
 def install_package(package, rootdir, mode):
 	pkginfo = os.path.join("/usr/ports", package, "PKGINFO")
 	if os.path.exists(pkginfo) == False:
-		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}")
+		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}", "p", 1)
 
 	variables, sections = parse_pkginfo(pkginfo)
 
@@ -136,7 +136,7 @@ def install_package(package, rootdir, mode):
 		else:
 			confirm = input(f"{YELLOW}Correct? (y/n): {RESET}")
 		if confirm != "y":
-			exitp.exitp("Aborting")
+			exitp.exitp("Aborting", "p", 0)
 
 	if mode == "i":
 		if "DEPENDSON" in variables:
@@ -220,18 +220,18 @@ else:
 if args.update == True:
 	os.system("touch /var/lock/pkgctl.lock")
 	if os.path.exists("/etc/pkgctl/mirror.conf") != True:
-		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}/etc/pkgctl/mirror.conf doesn't exist!{RESET}")
+		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}/etc/pkgctl/mirror.conf doesn't exist!{RESET}", "p", 1)
 	with open("/etc/pkgctl/mirror.conf", "r") as mirrorcfg:
 		mirror = str(mirrorcfg.read())
 	os.system(f"rm -rf {os.path.join("/usr/ports/*")}")
 	os.system("git clone {mirror} /var/cache/pkgctl/index")
 	os.system(f"mv /var/cache/pkgctl/index/* /usr/ports")
-	exitp.exitp(f"{GREEN}Task completed successfully!{RESET}")
+	exitp.exitp(f"{GREEN}Task completed successfully!{RESET}", "p", 0)
 
 elif args.remove != None:
 	os.system("touch /var/lock/pkgctl.lock")
 	if os.path.exists(os.path.join(rootdir, "var/db/pkgctl", args.remove)) == False:
-		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}")
+		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}", "p", 1)
 	else:
 		with open(os.path.join(rootdir, "var/db/pkgctl", args.remove, "FILES"), "r") as rpkg:
 			print("Name			Version			")
@@ -241,15 +241,15 @@ elif args.remove != None:
 			else:
 				confirm = "y"
 			if confirm != "y":
-				exitp.exitp("Aborting")
+				exitp.exitp("Aborting", "p", 0)
 			if open(os.path.join(rootdir, 'var/db/pkgctl', args.remove, 'CATEGORY')).read() == "base":
 				confirm = input(f"{RED}WARNING: {RESET}{args.remove} {YELLOW}is a base package. Are you sure you want to remove {args.remove}{YELLOW}? (y/n): {RESET}")
 				if confirm != "y""
-					exitp.exitp("Aborting")
+					exitp.exitp("Aborting", "p", 0)
 			print(f"{BRIGHT_BLUE}==>> Deinstalling {args.remove}...{RESET}")
 			os.system(f"rm -rf {rpkg.read()}")
 			os.system(f"rm -rf {os.path.join(rootdir, 'var/db/pkgctl', args.remove)}")
-			exitp.exitp(f"{GREEN}Task completed succesfully!{RESET}")
+			exitp.exitp(f"{GREEN}Task completed succesfully!{RESET}", "p", 0)
 			
 elif args.build != None:
 	os.system("touch /var/lock/pkgctl.lock")
@@ -260,14 +260,14 @@ elif args.build != None:
 		for sec in ("fetch", "build"):
 			if sec in sections:
 				run_commands(sections[sec], variables)
-		exitp.exitp(f"{GREEN}Task completed successfully!{RESET}")
+		exitp.exitp(f"{GREEN}Task completed successfully!{RESET}", "p", 0)
 	else:
-		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}")
+		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}", "p", 1)
 
 elif args.install != None:
 	os.system("touch /var/lock/pkgctl.lock")
 	install_package(args.install, rootdir, "i")
-	exitp.exitp(f"{GREEN}Task completed successfully{RESET}")
+	exitp.exitp(f"{GREEN}Task completed successfully{RESET}", "p", 0)
 
 elif args.upgrade == True:
 	os.system("touch /var/lock/pkgctl.lock")
@@ -286,7 +286,7 @@ elif args.upgrade == True:
 	upgradablelist = list(dict.fromkeys(upgradable))
 
 	if not upgradablelist:
-		exitp.exitp(f"{BRIGHT_BLUE}All packages are up to date")
+		exitp.exitp(f"{BRIGHT_BLUE}All packages are up to date", "p", 0)
 
 	print("Name			Version			")
 	for pkg in (upgradablelist):
@@ -298,7 +298,7 @@ elif args.upgrade == True:
 	else:
 		confirm = input(f"{YELLOW}Correct? (y/n): {RESET}")
 	if confirm != "y":
-		exitp.exitp("Aborting")
+		exitp.exitp("Aborting", "p", 0)
 
 	for pkg in (upgradablelist):
 		install_package(pkg, rootdir, "u")
