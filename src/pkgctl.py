@@ -16,6 +16,7 @@ import os
 import sys 
 
 pversion = "pkgctl 1.1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
+variables = {}
 
 RESET   = "\033[0m"
 RED 	= "\033[31m"
@@ -98,7 +99,7 @@ def run_commands(commands, variables, exitp):
             
 if os.path.exists("/etc/pkgctl.conf") == True:
 
-	if not variables:
+	if variables == None:
 		variables = {}
 	with open("/etc/pkgctl.conf", "r") as f:
 		for line in f :
