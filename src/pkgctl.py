@@ -16,7 +16,6 @@ import os
 import sys 
 
 pversion = "pkgctl 1.1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
-variables = {}
 
 RESET   = "\033[0m"
 RED 	= "\033[31m"
@@ -43,8 +42,7 @@ class MultiLineVersion(argparse.Action):
         parser.exit()
 
 def parse_pkginfo(path):
-	if not variables:
-		variables = {}
+	variables = {}
 	sections = {}
 	current_section = None
 	buffer = []
@@ -99,8 +97,7 @@ def run_commands(commands, variables, exitp):
             
 if os.path.exists("/etc/pkgctl.conf") == True:
 
-	if variables == None:
-		variables = {}
+	conf = {}
 	with open("/etc/pkgctl.conf", "r") as f:
 		for line in f :
 			line = line.strip()
@@ -110,7 +107,7 @@ if os.path.exists("/etc/pkgctl.conf") == True:
 				key, value = line.split("=", 1)
 				key = key.strip()
 				value= value.strip().strip('"').strip("'")
-				variables[key] = value
+				conf[key] = value
 else:
 	exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}/etc/pkgctl.conf does not exist!{RESET}", "p", 1)
 
@@ -120,6 +117,7 @@ def install_package(package, rootdir, mode):
 		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}", "p", 1)
 
 	variables, sections = parse_pkginfo(pkginfo)
+	variables["MAKEOPTS"] = conf["MAKEOPTS"]
 
 	pkgdb = os.path.join(rootdir, "var/db/pkgctl", package)
 	cachedir = os.path.join(rootdir, "var/cache/pkgctl")
