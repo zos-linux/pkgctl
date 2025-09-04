@@ -44,37 +44,37 @@ class MultiLineVersion(argparse.Action):
 def parse_pkginfo(path):
 	if not variables:
 		variables = {}
-    sections = {}
-    current_section = None
-    buffer = []
+	sections = {}
+	current_section = None
+	buffer = []
 
-    with open(path, "r") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
+	with open(path, "r") as f:
+		for line in f:
+			line = line.strip()
+			if not line or line.startswith("#"):
+				continue
 
-            if line.endswith("=("):
-                current_section = line.split("=")[0].strip()
-                buffer = []
-                continue
+			if line.endswith("=("):
+				current_section = line.split("=")[0].strip()
+				buffer = []
+				continue
 
-            if line == ")":
-            	if current_section:
-            		sections[current_section] = buffer
-            	current_section = None
-            	buffer = []
-            	continue
+			if line == ")":
+				if current_section:
+					sections[current_section] = buffer
+				current_section = None
+				buffer = []
+				continue
 
-            if current_section:
-                buffer.append(line)
-                continue
+			if current_section:
+				buffer.append(line)
+				continue
                 
-            if "=" in line:
-                key, value = line.split("=", 1)
-                variables[key.strip()] = value.strip()
+			if "=" in line:
+				key, value = line.split("=", 1)
+				variables[key.strip()] = value.strip()
 
-    return variables, sections
+	return variables, sections
 
 
 def run_commands(commands, variables, exitp):
