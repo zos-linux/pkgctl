@@ -42,7 +42,8 @@ class MultiLineVersion(argparse.Action):
         parser.exit()
 
 def parse_pkginfo(path):
-    variables = {}
+	if not variables:
+    	variables = {}
     sections = {}
     current_section = None
     buffer = []
@@ -97,6 +98,8 @@ def run_commands(commands, variables, exitp):
             
 if os.path.exists("/etc/pkgctl.conf") == True:
 
+	if not variables:
+		variables = {}
 	with open("/etc/pkgctl.conf", "r") as f:
 		for line in f :
 			line = line.strip()
