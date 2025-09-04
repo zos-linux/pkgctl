@@ -23,7 +23,7 @@ if os.path.exists("/usr/share/pkgctl/modules/exitp.py") == False:
 sys.path.append("/usr/share/pkgctl/modules")
 import exitp
 
-pversion = "pkgctl fetch 1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
+pversion = "pkgctl fetch 1.1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
 
 class MultiLineVersion(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):

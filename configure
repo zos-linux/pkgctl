@@ -8,7 +8,7 @@
 # zOS and pkgctl zOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law. 
 #
 
-VERSION="1.1"
+VERSION="1.1.1"
 
 printf "Starting pkgctl $VERSION configuration...\n"
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #
-# pkgctl 1.1
+# pkgctl 1.1.1
 # zOS default package manager written with <3 by Chruścik. 
 #
 # Licensed under GNU General Public License v3.
@@ -15,7 +15,7 @@ import argparse
 import os
 import sys 
 
-pversion = "pkgctl 1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
+pversion = "pkgctl 1.1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
 
 RESET   = "\033[0m"
 RED 	= "\033[31m"
