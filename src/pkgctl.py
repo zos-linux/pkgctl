@@ -76,7 +76,7 @@ def parse_pkginfo(path):
 	return variables, sections
 
 
-def run_commands(commands, variables, exitp):
+def run_commands(commands, variables):
     for cmd in commands:
         for k, v in variables.items():
             cmd = cmd.replace(f"${k}", v)
