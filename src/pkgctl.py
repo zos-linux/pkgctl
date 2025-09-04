@@ -43,7 +43,7 @@ class MultiLineVersion(argparse.Action):
 
 def parse_pkginfo(path):
 	if not variables:
-    	variables = {}
+		variables = {}
     sections = {}
     current_section = None
     buffer = []
