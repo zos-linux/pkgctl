@@ -244,7 +244,7 @@ elif args.remove != None:
 				exitp.exitp("Aborting", "p", 0)
 			if open(os.path.join(rootdir, 'var/db/pkgctl', args.remove, 'CATEGORY')).read() == "base":
 				confirm = input(f"{RED}WARNING: {RESET}{args.remove} {YELLOW}is a base package. Are you sure you want to remove {args.remove}{YELLOW}? (y/n): {RESET}")
-				if confirm != "y""
+				if confirm != "y":
 					exitp.exitp("Aborting", "p", 0)
 			print(f"{BRIGHT_BLUE}==>> Deinstalling {args.remove}...{RESET}")
 			os.system(f"rm -rf {rpkg.read()}")
