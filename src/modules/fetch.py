@@ -3,12 +3,12 @@
 #
 # Fetching module for pkgctl
 # Written by Chruścik with <3
-# 
+#
 # zOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law.
 # Licensed under GNU General Public License v3
 #
 
-import os 
+import os
 import sys
 import argparse
 import tqdm
@@ -98,5 +98,5 @@ if __name__ == "__main__":
 	else:
 		args.output = ""
 	
-	fetch(args.output, args.destdir, args.url, "i") 
- 
+	fetch(args.output, args.destdir, args.url, "i")
+    print(f{RESET})

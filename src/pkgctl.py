@@ -2,10 +2,10 @@
 
 #
 # pkgctl 1.1.1
-# zOS default package manager written with <3 by Chruścik. 
+# zOS default package manager written with <3 by Chruścik.
 #
 # Licensed under GNU General Public License v3.
-# zOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law. 
+# zOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law.
 #
 
 import re
@@ -13,7 +13,7 @@ import subprocess
 from pathlib import Path
 import argparse
 import os
-import sys 
+import sys
 
 pversion = "pkgctl 1.1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
 
@@ -68,7 +68,7 @@ def parse_pkginfo(path):
 			if current_section:
 				buffer.append(line)
 				continue
-                
+
 			if "=" in line:
 				key, value = line.split("=", 1)
 				variables[key.strip()] = value.strip()
@@ -93,8 +93,8 @@ def run_commands(commands, variables):
             exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Child-process failed with error code{RESET} {e.returncode}: {cmd}", "p", 1)
         except Exception as e:
             exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Child-process {RESET}'{cmd}' {BRIGHT_BLUE}failed{RESET}: {e}", "p", 1)
-            
-            
+
+
 if os.path.exists("/etc/pkgctl.conf") == True:
 
 	conf = {}
@@ -117,7 +117,14 @@ def install_package(package, rootdir, mode):
 		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}", "p", 1)
 
 	variables, sections = parse_pkginfo(pkginfo)
-	variables["MAKEOPTS"] = conf["MAKEOPTS"]
+    if "MAKEOPTS" in conf:
+        variables["MAKEOPTS"] = conf["MAKEOPTS"]
+    if "CFLAGS" in conf:
+        variables["CFLAGS"] = conf["CFLAGS"]
+    if "CXXFLAGS" in conf:
+        variables["CXXFLAGS"] = conf["CXXFLAGS"]
+    if "BUILDOPTS" in conf:
+        variables["BUILDOPTS"] = conf["BUILDOPTS"]
 
 	pkgdb = os.path.join(rootdir, "var/db/pkgctl", package)
 	cachedir = os.path.join(rootdir, "var/cache/pkgctl")
@@ -179,7 +186,7 @@ def install_package(package, rootdir, mode):
 		os.makedirs(pkgdb)
 	os.system(f"cp -f {os.path.join('/usr/ports', package, 'FILES')} {os.path.join(pkgdb, 'FILES')}")
 	with open(os.path.join(pkgdb, "VERSION"), "w") as v:
-		v.write(variables['PKGVERSION']) 
+		v.write(variables['PKGVERSION'])
 	with open(os.path.join(pkgdb, "PKGNAME"), "w") as p:
 		p.write(variables['PKGNAME'])
 	os.system(f"cp -f {os.path.join('/usr/ports', package, 'CATEGORY')} {os.path.join(pkgdb, 'CATEGORY')}")
@@ -255,7 +262,7 @@ elif args.remove != None:
 			
 elif args.build != None:
 	os.system("touch /var/lock/pkgctl.lock")
-	if os.path.exists(os.path.join("/usr/ports", args.build, "PKGINFO")) == True: 
+	if os.path.exists(os.path.join("/usr/ports", args.build, "PKGINFO")) == True:
 		variables, sections = parse_pkginfo(os.path.join("/usr/ports", args.build, "PKGINFO"))
 		print("Name			Version			")
 		print(f"{variables['PKGNAME']}			{variables['PKGVERSION']}")
