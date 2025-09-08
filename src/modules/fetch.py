@@ -99,4 +99,4 @@ if __name__ == "__main__":
 		args.output = ""
 	
 	fetch(args.output, args.destdir, args.url, "i")
-    print(f{RESET})
+    print(f{})
