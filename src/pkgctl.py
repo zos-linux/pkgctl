@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #
-# pkgctl 1.1.1
+# pkgctl 1.1.2
 # zOS default package manager written with <3 by Chruścik.
 #
 # Licensed under GNU General Public License v3.
@@ -15,7 +15,7 @@ import argparse
 import os
 import sys
 
-pversion = "pkgctl 1.1.1\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
+pversion = "pkgctl 1.1.2\n\nDeveloped with <3 by Chruścik.\nLicensed under GNU General Public License v3.\nzOS and pkgctl comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law."
 
 RESET   = "\033[0m"
 RED 	= "\033[31m"
@@ -189,15 +189,17 @@ def install_package(package, rootdir, mode):
 		v.write(variables['PKGVERSION'])
 	with open(os.path.join(pkgdb, "PKGNAME"), "w") as p:
 		p.write(variables['PKGNAME'])
+	if os.path.exists(os.path.join("/usr/ports", package, "PROVIDES")):
+		os.system(f"cp -f {os.path.join('/usr/ports', package, 'PROVIDES')} {os.path.join(pkgdb, 'PROVIDES')}")
 	os.system(f"cp -f {os.path.join('/usr/ports', package, 'CATEGORY')} {os.path.join(pkgdb, 'CATEGORY')}")
 
 parser = argparse.ArgumentParser(description="Example")
 
-parser.add_argument("-B", "--build", type=str, action="store", help="Build only, do not install (WIP)")
+#parser.add_argument("-B", "--build", type=str, action="store", help="Build only, do not install (WIP)")
 #parser.add_argument("-v", "--verbose", action="store_true", help="Verbose mode")
 #parser.add_argument("-q", "--quiet", action="store_true", help="Quiet mode")
 parser.add_argument("-r", "--remove", type=str, action="store", help="Remove package")
-parser.add_argument("-R", "--rootdir", type=str, action="store", help="Path to custom rootdir")
+#parser.add_argument("-R", "--rootdir", type=str, action="store", help="Path to custom rootdir")
 parser.add_argument("-u", "--update", action="store_true", help="Update package index")
 parser.add_argument("-U", "--upgrade", action="store_true", help="Perform system upgrade")
 parser.add_argument("-V", "--version", nargs=0, action=MultiLineVersion, help="Print pkgctl version")
@@ -213,7 +215,7 @@ if os.geteuid() != 0:
 
 if os.path.exists("/var/lock/pkgctl.lock") == True:
 	print(f"{RED}ERROR: {BRIGHT_BLUE}/var/lock/pkgctl.lock exists, cannot continue.{RESET}")
-	exit()
+	sys.exit(1)
 
 if os.path.exists("/var/cache/pkgctl/") == False:
 	os.makedirs("/var/cache/pkgctl")
@@ -260,18 +262,18 @@ elif args.remove != None:
 			os.system(f"rm -rf {os.path.join(rootdir, 'var/db/pkgctl', args.remove)}")
 			exitp.exitp(f"{GREEN}Task completed succesfully!{RESET}", "p", 0)
 			
-elif args.build != None:
-	os.system("touch /var/lock/pkgctl.lock")
-	if os.path.exists(os.path.join("/usr/ports", args.build, "PKGINFO")) == True:
-		variables, sections = parse_pkginfo(os.path.join("/usr/ports", args.build, "PKGINFO"))
-		print("Name			Version			")
-		print(f"{variables['PKGNAME']}			{variables['PKGVERSION']}")
-		for sec in ("fetch", "build"):
-			if sec in sections:
-				run_commands(sections[sec], variables)
-		exitp.exitp(f"{GREEN}Task completed successfully!{RESET}", "p", 0)
-	else:
-		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}", "p", 1)
+#elif args.build != None:
+#	os.system("touch /var/lock/pkgctl.lock")
+#	if os.path.exists(os.path.join("/usr/ports", args.build, "PKGINFO")) == True:
+#		variables, sections = parse_pkginfo(os.path.join("/usr/ports", args.build, "PKGINFO"))
+#		print("Name			Version			")
+#		print(f"{variables['PKGNAME']}			{variables['PKGVERSION']}")
+#		for sec in ("fetch", "build"):
+#			if sec in sections:
+#				run_commands(sections[sec], variables)
+#		exitp.exitp(f"{GREEN}Task completed successfully!{RESET}", "p", 0)
+#	else:
+#		exitp.exitp(f"{RED}ERROR: {BRIGHT_BLUE}Specified package doesn't exist!{RESET}", "p", 1)
 
 elif args.install != None:
 	os.system("touch /var/lock/pkgctl.lock")
