@@ -3,7 +3,7 @@ DESTDIR = destdir
 PREFIX = prefix
 PKGCTLBIN = $(SRCDIR)/src/pkgctl.py
 FILES = $(SRCDIR)/FILES
-VERSION = 1.1.1
+VERSION = 1.1.2
 PKGNAME = pkgctl
 CATEGORY = base
 
@@ -12,6 +12,7 @@ all:
 
 install:
 	install -m 755 $(PKGCTLBIN) $(DESTDIR)/$(PREFIX)/bin/pkgctl
+	install -m 755 $(SRCDIR)/src/setdefault.py $(DESTDIR)/$(PREFIX)/bin/set-default
 	install -d -m 644 $(DESTDIR)/var/db/pkgctl/pkgctl
 	install -d -m 644 $(DESTDIR)/$(PREFIX)/share/pkgctl/modules
 	install -m 755 $(SRCDIR)/src/modules/fetch.py $(DESTDIR)/$(PREFIX)/share/pkgctl/modules/fetch.py
