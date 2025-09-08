@@ -11,7 +11,7 @@ pkgctl --install pkgctl
 ```
 or install it from source
 ```bash
-git clone https://gitlab.com/zos-linux/pkgctl.git
+git clone https://github.com/zos-linux/pkgctl.git
 cd pkgctl
 ./configure --prefix=/usr
 sudo make install
